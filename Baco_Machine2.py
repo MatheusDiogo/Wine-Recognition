@@ -25,7 +25,7 @@ np.random.seed(seed)
 kf = KFold(n_splits=num_folds)
 
 # Crie um modelo de Floresta Aleatória
-model = RandomForestClassifier(n_estimators=50, max_depth=2, min_samples_leaf=2, random_state=seed)
+model = RandomForestClassifier(n_estimators=100, max_depth=1, min_samples_leaf=2, random_state=seed)
 
 # Normalizar os dados
 scaler = StandardScaler()
@@ -61,7 +61,7 @@ wine_df['target'] = y
 print(wine_df.head(10))
 
 # Dividir os dados em conjuntos de treinamento e teste (por exemplo, 80% treinamento, 20% teste)
-x_train, x_test, y_train, y_test = train_test_split(x_normalized, y, test_size=0.2, random_state=seed)
+x_train, x_test, y_train, y_test = train_test_split(x_normalized, y, test_size=0.2, random_state=seed, stratify=y)
 
 model.fit(x_train, y_train)
 
