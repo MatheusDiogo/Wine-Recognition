@@ -27,13 +27,6 @@ kf = KFold(n_splits=num_folds)
 # Crie um modelo de Floresta Aleatória
 model = RandomForestClassifier(n_estimators=50, max_depth=2, min_samples_leaf=2, random_state=seed)
 
-# Definir o espaço de busca de hiperparâmetros
-param_grid = {
-    'n_estimators': [50, 100, 200],
-    'max_depth': [2, 4, 6],
-    'min_samples_leaf': [1, 2, 4]
-}
-
 # Normalizar os dados
 scaler = StandardScaler()
 x_normalized = scaler.fit_transform(x)
@@ -68,45 +61,7 @@ wine_df['target'] = y
 print(wine_df.head(10))
 
 # Dividir os dados em conjuntos de treinamento e teste (por exemplo, 80% treinamento, 20% teste)
-x_train0, x_test, y_train0, y_test = train_test_split(x_normalized, y, test_size=0.2, random_state=seed, stratify=y)
-
-from sklearn.feature_selection import SelectKBest, f_classif
-from sklearn.model_selection import GridSearchCV
-
-# Criar um objeto GridSearchCV para otimizar os hiperparâmetros
-grid_search = GridSearchCV(estimator=model, param_grid=param_grid, scoring='accuracy', cv=kf)
-grid_search.fit(x_train0, y_train0)
-
-# Obter os melhores hiperparâmetros encontrados
-best_params = grid_search.best_params_
-print("Melhores Hiperparâmetros:", best_params)
-
-# Obter o modelo treinado com os melhores hiperparâmetros
-model = grid_search.best_estimator_
-
-# Realize a validação cruzada
-scores = cross_val_score(model, x_train0, y_train0, cv=kf)
-
-# Exiba as pontuações de desempenho em cada fold
-print("Pontuacoes de Desempenho em cada Fold:", scores)
-
-# Calcule e exiba a média das pontuações
-print("Media das Pontuacoes:", np.mean(scores))
-
-# Escolha a divisão com melhor desempenho médio
-best_split = scores.argmax()
-
-# Obtenha os índices dos dados para a melhor divisão
-best_train_index, best_test_index = list(kf.split(x_normalized))[best_split]
-
-# Divida novamente os dados apenas para treinamento usando a melhor divisão
-x_train, y_train = x_normalized[best_train_index], y[best_train_index]
-
-unique_classes_train = np.unique(y_train)
-unique_classes_test = np.unique(y_test)
-
-print("Classes únicas em y_train:", unique_classes_train)
-print("Classes únicas em y_test:", unique_classes_test)
+x_train, x_test, y_train, y_test = train_test_split(x_normalized, y, test_size=0.2, random_state=seed)
 
 model.fit(x_train, y_train)
 
