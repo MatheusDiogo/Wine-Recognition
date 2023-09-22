@@ -25,7 +25,7 @@ np.random.seed(seed)
 kf = KFold(n_splits=num_folds)
 
 # Crie um modelo de Floresta Aleatória
-model = RandomForestClassifier(n_estimators=100, max_depth=1, min_samples_leaf=2, random_state=seed)
+model = RandomForestClassifier(n_estimators=50, max_depth=1, min_samples_leaf=2, random_state=seed)
 
 # Normalizar os dados
 scaler = StandardScaler()
@@ -123,7 +123,7 @@ from mlxtend.plotting import plot_decision_regions
 plt.figure(figsize=(10, 6))
 
 # Criar um modelo de árvore de decisão que aceita apenas duas características
-model_RandomForest = RandomForestClassifier(random_state=seed)
+model_RandomForest = RandomForestClassifier(n_estimators=50, max_depth=1, min_samples_leaf=2, random_state=seed)
 
 # Ajustar o modelo aos dados de treinamento com apenas as duas características selecionadas
 model_RandomForest.fit(x_train[:, [feature1_index, feature2_index]], y_train)
