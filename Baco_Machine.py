@@ -249,3 +249,49 @@ plt.ylabel('Taxa de Verdadeiro Positivo (TPR)')
 plt.title('Curvas ROC por Classe')
 plt.legend(loc='lower right')
 plt.show()
+
+# Teste com novo conjunto de dados
+new_wine_data = np.array([[13.24, 2.59], [12.64, 3.36], [14.06, 2.15]])  # Exemplo de novos dados
+
+# Criar um novo StandardScaler apenas para as 2 características
+scaler_new = StandardScaler()
+scaler_new.fit(x[:, [feature1_index, feature2_index]])  # Ajuste apenas para as 2 características originais
+
+# Normalizar os novos dados usando o novo scaler
+new_x_normalized = scaler_new.transform(new_wine_data)
+
+# Fazer previsões para as novas amostras
+predicted_classes = model.predict(new_x_normalized)
+
+# Obter as probabilidades associadas a cada classe
+class_probabilities = model.predict_proba(new_x_normalized)
+
+# Exibir a classe prevista e as probabilidades
+for i, (predicted_class, probabilities) in enumerate(zip(predicted_classes, class_probabilities)):
+    print(f"Amostra {i + 1}:")
+    print(f"Classe prevista: {predicted_class} ({wine.target_names[predicted_class]})")
+    for class_idx, prob in enumerate(probabilities):
+        print(f"Probabilidade da Classe {class_idx} ({wine.target_names[class_idx]}): {prob:.2f}")
+    print()
+
+# Plotar um gráfico de dispersão das duas características com cores representando as classes
+plt.figure(figsize=(10, 6))
+plt.scatter(new_x_normalized[:, 0], new_x_normalized[:, 1], c=predicted_classes, cmap=plt.cm.Paired)
+plt.xlabel(wine.feature_names[0])
+plt.ylabel(wine.feature_names[1])  # Usar o índice 1 para a segunda característica
+plt.title('Gráfico de Dispersão das Duas Características para Novos Dados')
+plt.show()
+
+# Plotar as regiões de decisão
+plt.figure(figsize=(10, 6))
+
+# Converter os novos dados normalizados em um array NumPy
+new_x_normalized_np = new_x_normalized
+
+# Plotar as fronteiras de decisão com base nas duas características
+plot_decision_regions(new_x_normalized_np, predicted_classes, clf=model)
+plt.xlabel(wine.feature_names[0])
+plt.ylabel(wine.feature_names[1])
+plt.title('Fronteiras de Decisão para Novos Dados')
+plt.legend(title="Wines")
+plt.show()
